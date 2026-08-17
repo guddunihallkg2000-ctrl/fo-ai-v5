@@ -1,1 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FO AI V5</title>
+</head>
+<body>
+  <h1>FO AI V5</h1>
+  <p>AI Trading Signal Engine</p>
 
+  <button onclick="checkStatus()">Check System</button>
+
+  <pre id="result">System ready...</pre>
+
+  <script>
+    async function checkStatus() {
+      try {
+        const response = await fetch("/api/status");
+        const data = await response.json();
+
+        document.getElementById("result").textContent =
+          JSON.stringify(data, null, 2);
+      } catch (error) {
+        document.getElementById("result").textContent =
+          "Connection error: " + error.message;
+      }
+    }
+  </script>
+</body>
+</html>
