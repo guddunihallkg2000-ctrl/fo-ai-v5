@@ -1,31 +1,405 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FO AI V5</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #070b12;
+      color: #f5f7fa;
+    }
+
+    .app {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .header {
+      padding: 10px 0 25px;
+      border-bottom: 1px solid #202936;
+    }
+
+    .logo {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .subtitle {
+      color: #8993a3;
+      margin-top: 6px;
+    }
+
+    .status {
+      margin-top: 20px;
+      padding: 14px;
+      border-radius: 12px;
+      background: #101722;
+      border: 1px solid #263140;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: #22c55e;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .panel {
+      margin-top: 20px;
+      padding: 18px;
+      background: #101722;
+      border: 1px solid #263140;
+      border-radius: 16px;
+    }
+
+    label {
+      display: block;
+      color: #9aa5b5;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #344052;
+      background: #080d14;
+      color: white;
+      font-size: 16px;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 14px;
+      padding: 15px;
+      border: 0;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .signal {
+      text-align: center;
+      padding: 25px;
+      margin-top: 20px;
+      border-radius: 16px;
+      background: #0c121b;
+      border: 1px solid #263140;
+    }
+
+    .signal-title {
+      color: #8993a3;
+      font-size: 13px;
+      letter-spacing: 1px;
+    }
+
+    .signal-value {
+      font-size: 42px;
+      font-weight: 800;
+      margin: 12px 0;
+    }
+
+    .wait {
+      color: #f59e0b;
+    }
+
+    .buy {
+      color: #22c55e;
+    }
+
+    .sell {
+      color: #ef4444;
+    }
+
+    .info {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .box {
+      padding: 14px;
+      background: #111925;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .box small {
+      display: block;
+      color: #7f8998;
+      margin-bottom: 7px;
+    }
+
+    .box strong {
+      font-size: 15px;
+    }
+
+    .notice {
+      margin-top: 20px;
+      padding: 14px;
+      border-radius: 10px;
+      background: #17130b;
+      border: 1px solid #4b3917;
+      color: #c8b47b;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .footer {
+      text-align: center;
+      color: #687385;
+      font-size: 12px;
+      margin-top: 25px;
+    }
+
+    @media (max-width: 600px) {
+      .app {
+        padding: 15px;
+      }
+
+      .info {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <h1>FO AI V5</h1>
-  <p>AI Trading Signal Engine</p>
 
-  <button onclick="checkStatus()">Check System</button>
+  <div class="app">
 
-  <pre id="result">System ready...</pre>
+    <div class="header">
+      <div class="logo">FO AI V5</div>
+      <div class="subtitle">AI Trading Signal Engine</div>
+    </div>
+
+    <div class="status">
+      <span class="dot"></span>
+      <strong id="systemStatus">Checking system...</strong>
+    </div>
+
+    <div class="panel">
+
+      <label for="symbol">Trading Symbol</label>
+
+      <input
+        id="symbol"
+        type="text"
+        value="NIFTY"
+        placeholder="Enter symbol e.g. NIFTY"
+      >
+
+      <button onclick="analyze()">
+        ANALYZE MARKET
+      </button>
+
+    </div>
+
+    <div class="signal">
+
+      <div class="signal-title">
+        CURRENT SIGNAL
+      </div>
+
+      <div id="signal" class="signal-value wait">
+        WAIT
+      </div>
+
+      <div id="message">
+        Waiting for market analysis...
+      </div>
+
+      <div class="info">
+
+        <div class="box">
+          <small>SYMBOL</small>
+          <strong id="resultSymbol">NIFTY</strong>
+        </div>
+
+        <div class="box">
+          <small>ENTRY</small>
+          <strong id="entry">—</strong>
+        </div>
+
+        <div class="box">
+          <small>STOP LOSS</small>
+          <strong id="stopLoss">—</strong>
+        </div>
+
+      </div>
+
+      <div class="info">
+
+        <div class="box">
+          <small>TARGET</small>
+          <strong id="target">—</strong>
+        </div>
+
+        <div class="box">
+          <small>MODE</small>
+          <strong id="mode">SIGNAL ONLY</strong>
+        </div>
+
+        <div class="box">
+          <small>STATUS</small>
+          <strong id="connection">OFFLINE</strong>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="notice">
+      <strong>Manual execution mode</strong><br>
+      FO AI V5 provides analysis and signals only.
+      No automatic orders are placed.
+      Always verify the signal and market conditions before trading.
+    </div>
+
+    <div class="footer">
+      FO AI V5 • Signal Engine
+    </div>
+
+  </div>
 
   <script>
+
     async function checkStatus() {
+
+      const status = document.getElementById("systemStatus");
+      const connection = document.getElementById("connection");
+
       try {
+
         const response = await fetch("/api/status");
         const data = await response.json();
 
-        document.getElementById("result").textContent =
-          JSON.stringify(data, null, 2);
+        if (data.connected) {
+
+          status.textContent = "System online";
+          connection.textContent = "CONNECTED";
+
+        } else {
+
+          status.textContent = "System online • Market adapter not connected";
+          connection.textContent = "NOT CONNECTED";
+
+        }
+
       } catch (error) {
-        document.getElementById("result").textContent =
-          "Connection error: " + error.message;
+
+        status.textContent = "Server connection error";
+        connection.textContent = "OFFLINE";
+
       }
     }
+
+
+    async function analyze() {
+
+      const symbolInput = document.getElementById("symbol");
+      const symbol = symbolInput.value.trim().toUpperCase();
+
+      const signal = document.getElementById("signal");
+      const message = document.getElementById("message");
+
+      const resultSymbol = document.getElementById("resultSymbol");
+      const entry = document.getElementById("entry");
+      const stopLoss = document.getElementById("stopLoss");
+      const target = document.getElementById("target");
+
+      if (!symbol) {
+        message.textContent = "Please enter a trading symbol.";
+        return;
+      }
+
+      signal.textContent = "ANALYZING...";
+      signal.className = "signal-value wait";
+      message.textContent = "Running analysis...";
+
+      try {
+
+        const response = await fetch("/api/analyze", {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+            symbol: symbol
+          })
+
+        });
+
+        const data = await response.json();
+
+        resultSymbol.textContent = data.symbol || symbol;
+        signal.textContent = data.signal || "WAIT";
+
+        entry.textContent =
+          data.entry !== null && data.entry !== undefined
+            ? data.entry
+            : "—";
+
+        stopLoss.textContent =
+          data.stopLoss !== null && data.stopLoss !== undefined
+            ? data.stopLoss
+            : "—";
+
+        target.textContent =
+          data.target !== null && data.target !== undefined
+            ? data.target
+            : "—";
+
+        message.textContent =
+          data.message || "Analysis complete.";
+
+        signal.className = "signal-value";
+
+        if (data.signal === "BUY") {
+          signal.classList.add("buy");
+        } else if (data.signal === "SELL") {
+          signal.classList.add("sell");
+        } else {
+          signal.classList.add("wait");
+        }
+
+      } catch (error) {
+
+        signal.textContent = "ERROR";
+        signal.className = "signal-value sell";
+        message.textContent = "Unable to connect to the analysis engine.";
+
+      }
+    }
+
+
+    checkStatus();
+
   </script>
+
 </body>
 </html>
