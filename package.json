@@ -1,0 +1,12 @@
+{
+  "name": "fo-ai-v5",
+  "version": "1.0.0",
+  "description": "F&O AI signal dashboard for NIFTY and BANK NIFTY",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "4.21.2"
+  }
+}
